@@ -26,11 +26,28 @@ const createDoctor = async (
 
 const getDoctors = async (req: Request, res: Response) => {
   try {
-    const doctor = await DoctorService.getDoctors()
+    // console.log(req.query)
+    const {
+      limit = 5,
+      page = 1,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      searchTerm = '',
+      ...filterData
+    } = req.query
+    const result = await DoctorService.getDoctors(
+      Number(limit),
+      Number(page),
+      String(sortBy),
+      sortOrder as 'asc' | 'desc',
+      searchTerm as string,
+      filterData,
+    )
     res.status(200).json({
       status: 'success',
       message: 'Doctor Retrived successfully',
-      data: doctor,
+      meta: result.meta,
+      data: result.data,
     })
   } catch (error) {
     res.status(400).json({
