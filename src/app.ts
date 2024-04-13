@@ -30,3 +30,7 @@ app.get('/', async (req: Request, res: Response, next: NextFunction) => {
 })
 
 export default app
+
+/*
+DATABASE_URL="postgres://postgres.fentvcchrvvpxoqoeciy:sifat100doctorsportal@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
+*/
