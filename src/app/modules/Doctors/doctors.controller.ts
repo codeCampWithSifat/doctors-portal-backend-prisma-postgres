@@ -1,10 +1,10 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { DoctorService } from './doctors.service'
 
 const createDoctor = async (
   req: Request,
   res: Response,
-  //   next: NextFunction,
+  next: NextFunction,
 ) => {
   try {
     const { ...doctorData } = req.body
@@ -15,12 +15,12 @@ const createDoctor = async (
       data: doctor,
     })
   } catch (error) {
-    // next(error)
-    res.status(400).json({
-      status: 'error',
-      message: 'Doctor Created  Failed',
-      error,
-    })
+    next(error)
+    // res.status(400).json({
+    //   status: 'error',
+    //   message: 'Doctor Created  Failed',
+    //   error,
+    // })
   }
 }
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import cors from 'cors'
 import express, { Application, NextFunction, Request, Response } from 'express'
 import httpStatus from 'http-status'
@@ -5,6 +7,7 @@ import httpStatus from 'http-status'
 import routes from './app/routes'
 
 import cookieParser from 'cookie-parser'
+import { globalErrorHandler } from './app/middlewares/globalErrorHandler'
 
 const app: Application = express()
 
@@ -21,11 +24,24 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/v1', routes)
 
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 app.get('/', async (req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.OK).json({
     success: true,
     message: 'Welcome HTTP SERVER',
+  })
+})
+
+// Global Error Handler
+app.use(globalErrorHandler)
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.NOT_FOUND).json({
+    success: false,
+    message: 'Not Found',
+    errorMessage: {
+      message: 'Not Found',
+      path: req.originalUrl,
+    },
   })
 })
 
