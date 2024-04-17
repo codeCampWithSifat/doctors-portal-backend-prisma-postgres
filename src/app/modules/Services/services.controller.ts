@@ -20,6 +20,26 @@ const createService = async (
   }
 }
 
+const getAllServices = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    //
+
+    const result = await ServiceService.getAllServices()
+    res.status(200).json({
+      status: 'Success',
+      message: 'Service Retrived Successfully',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const ServiceController = {
   createService,
+  getAllServices,
 }

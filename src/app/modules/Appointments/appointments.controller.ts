@@ -26,6 +26,23 @@ const bookAppointment = async (
   }
 }
 
+const getAllAppointments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await AppointmentService.getAllAppointments()
+    res.status(200).json({
+      status: 'Success',
+      message: 'Get All Appointment Successfully',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 export const AppointmentController = {
   bookAppointment,
+  getAllAppointments,
 }

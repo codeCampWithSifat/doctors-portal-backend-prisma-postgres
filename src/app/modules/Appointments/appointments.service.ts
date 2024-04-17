@@ -59,6 +59,12 @@ const bookAppointment = async (
   return booking
 }
 
+const getAllAppointments = async () => {
+  const result = await prisma.appointment.findMany()
+  return result
+}
+
 export const AppointmentService = {
   bookAppointment,
+  getAllAppointments,
 }

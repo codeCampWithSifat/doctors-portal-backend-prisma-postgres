@@ -3,7 +3,7 @@ import { PatientsController } from './patients.controller'
 
 const router = express.Router()
 
-router.get('/', PatientsController.getAllPatients)
 router.post('/create-patient', PatientsController.createPatient)
+router.get('/', PatientsController.getAllPatients)
 
 export const PatientRoutes = router

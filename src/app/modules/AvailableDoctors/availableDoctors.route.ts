@@ -8,4 +8,6 @@ router.post(
   AvailableDoctorController.createAvailableDoctor,
 )
 
+router.get('/', AvailableDoctorController.getAvailableDoctors)
+
 export const AvailableDoctorRoutes = router

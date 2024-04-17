@@ -9,6 +9,7 @@ import { AppointmentRoutes } from '../modules/Appointments/appointments.route'
 import { AvailableServiceRoutes } from '../modules/AvailableServices/availableServices.route'
 import { TimeSlotsRoutes } from '../modules/TimeSlots/timeSlots.route'
 import { AvailableDoctorRoutes } from '../modules/AvailableDoctors/availableDoctors.route'
+import { PaymentRoutes } from '../modules/Payments/payments.route'
 
 const router = express.Router()
 
@@ -48,6 +49,10 @@ const moduleRoutes: any[] = [
   {
     path: '/available-doctors',
     route: AvailableDoctorRoutes,
+  },
+  {
+    path: '/payments',
+    route: PaymentRoutes,
   },
 ]
 

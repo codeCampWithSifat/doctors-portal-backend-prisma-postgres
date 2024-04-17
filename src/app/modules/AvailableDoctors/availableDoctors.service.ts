@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AvailableDoctor } from '@prisma/client'
 import prisma from '../../Shared/prisma'
 
@@ -10,6 +11,12 @@ const createAvailableDoctor = async (
   return result
 }
 
+const getAvailableDoctors = async (): Promise<any> => {
+  const result = await prisma.availableDoctor.findMany()
+  return result
+}
+
 export const AvailableDoctorService = {
   createAvailableDoctor,
+  getAvailableDoctors,
 }

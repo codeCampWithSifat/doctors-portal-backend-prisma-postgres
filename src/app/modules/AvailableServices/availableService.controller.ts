@@ -18,6 +18,24 @@ const createAvailableService = async (
   }
 }
 
+const getAvailableService = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await AvailableServices.getAvailableService()
+    res.status(200).json({
+      status: 'Success',
+      message: 'Available Service Retrived  Successfully',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const AvailableController = {
   createAvailableService,
+  getAvailableService,
 }

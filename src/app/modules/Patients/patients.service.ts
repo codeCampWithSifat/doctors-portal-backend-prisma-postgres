@@ -27,7 +27,7 @@ const createPatient = async (
   return result
 }
 
-const getAllPatients = async () => {
+const getAllPatients = async (): Promise<any> => {
   const result = await prisma.patient.findMany()
 
   return result

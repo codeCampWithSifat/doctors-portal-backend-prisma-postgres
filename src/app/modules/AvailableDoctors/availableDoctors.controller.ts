@@ -22,6 +22,24 @@ const createAvailableDoctor = async (
   }
 }
 
+const getAvailableDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await AvailableDoctorService.getAvailableDoctors()
+    res.status(200).json({
+      status: 'Success',
+      message: 'Get All Available Doctors',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const AvailableDoctorController = {
   createAvailableDoctor,
+  getAvailableDoctors,
 }

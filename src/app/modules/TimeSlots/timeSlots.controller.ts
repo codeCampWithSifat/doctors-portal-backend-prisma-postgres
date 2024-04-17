@@ -19,6 +19,24 @@ const createTimeSlots = async (
   }
 }
 
+const getAllTimeSlots = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await TimeSlotsService.getAllTimeSlots()
+    res.status(200).json({
+      status: 'Success',
+      message: 'Time Slots Retrived Successfully',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const TimeSlotsController = {
   createTimeSlots,
+  getAllTimeSlots,
 }

@@ -10,6 +10,12 @@ const createAvailableService = async (
   return result
 }
 
+const getAvailableService = async () => {
+  const result = await prisma.availableService.findMany()
+  return result
+}
+
 export const AvailableServices = {
   createAvailableService,
+  getAvailableService,
 }
