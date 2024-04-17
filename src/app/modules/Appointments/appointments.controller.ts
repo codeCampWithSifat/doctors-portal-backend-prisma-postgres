@@ -42,7 +42,65 @@ const getAllAppointments = async (
     next(error)
   }
 }
+
+const cancelAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    //
+    const { id } = req.params
+    const result = await AppointmentService.cancelAppointment(id)
+    res.status(200).json({
+      status: 'Success',
+      message: 'Cancelled Your Appointment',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const startedAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id
+    const result = await AppointmentService.startedAppointment(id)
+    res.status(200).json({
+      status: 'Success',
+      message: 'Appointment Started Successfully',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const finishAppointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.params.id
+    const result = await AppointmentService.finishAppointment(id)
+    res.status(200).json({
+      status: 'Success',
+      message: 'Appointment Finished Successfully Congratulation',
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 export const AppointmentController = {
   bookAppointment,
   getAllAppointments,
+  cancelAppointment,
+  startedAppointment,
+  finishAppointment,
 }

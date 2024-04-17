@@ -59,6 +59,160 @@ const bookAppointment = async (
   return booking
 }
 
+const cancelAppointment = async (appointmentId: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: {
+      id: appointmentId,
+    },
+  })
+
+  if (!appointment) {
+    throw new Error('Appointment Does Not Exist')
+  }
+  if (appointment.status === 'cancelled') {
+    throw new Error('Appointment has already been cancelled')
+  }
+
+  if (appointment.status === 'finished') {
+    throw new Error('Appointment has already been Completed')
+  }
+
+  const cancelledAppointment = await prisma.$transaction(
+    async transactionClient => {
+      const appointmentToCancel = await transactionClient.appointment.update({
+        where: {
+          id: appointmentId,
+        },
+        data: {
+          status: 'cancelled',
+        },
+      })
+
+      const availableService =
+        await transactionClient.availableService.findUnique({
+          where: {
+            id: appointment.availableServiceId,
+          },
+        })
+      await transactionClient.availableService.update({
+        where: {
+          id: appointment.availableServiceId,
+        },
+        data: {
+          availableSeats: {
+            increment: 1,
+          },
+          isBooked:
+            availableService && availableService?.availableSeats + 1 > 0
+              ? false
+              : true,
+        },
+      })
+
+      const payment = await transactionClient.payment.update({
+        where: {
+          appointmentId,
+        },
+        data: {
+          paymentStatus: 'cancelled',
+        },
+      })
+      return {
+        appointment: appointmentToCancel,
+        payment,
+      }
+    },
+  )
+
+  return cancelledAppointment
+}
+
+const startedAppointment = async (appointmentId: string) => {
+  const appointment = await prisma.appointment.findUnique({
+    where: {
+      id: appointmentId,
+    },
+  })
+
+  if (!appointment) {
+    throw new Error('Appointment Does Not Exist')
+  }
+  if (appointment.status === 'cancelled') {
+    throw new Error('Appointment has already been cancelled')
+  }
+
+  if (appointment.status === 'finished') {
+    throw new Error('Appointment has already been Completed')
+  }
+
+  const startAppointment = await prisma.$transaction(
+    async transactionClient => {
+      await transactionClient.payment.update({
+        where: {
+          appointmentId,
+        },
+        data: {
+          paymentStatus: 'paid',
+          paymentDate: new Date().toISOString(),
+        },
+      })
+
+      const appointmentToStart = await transactionClient.appointment.update({
+        where: {
+          id: appointmentId,
+        },
+        data: {
+          status: 'started',
+        },
+      })
+
+      if (!appointmentToStart) {
+        await transactionClient.payment.update({
+          where: {
+            appointmentId,
+          },
+          data: {
+            paymentStatus: 'refund',
+          },
+        })
+      }
+
+      return appointmentToStart
+    },
+  )
+
+  return startAppointment
+}
+
+const finishAppointment = async (appointmentId: string): Promise<any> => {
+  const appointment = await prisma.appointment.findUnique({
+    where: {
+      id: appointmentId,
+    },
+  })
+
+  if (!appointment) {
+    throw new Error('Appointment Does Not Exist')
+  }
+  if (appointment.status === 'cancelled') {
+    throw new Error('Appointment has already been cancelled')
+  }
+
+  if (appointment.status === 'finished') {
+    throw new Error('Appointment has already been Completed')
+  }
+
+  const appointmentToFinish = await prisma.appointment.update({
+    where: {
+      id: appointmentId,
+    },
+    data: {
+      status: 'finished',
+    },
+  })
+  return appointmentToFinish
+}
+
 const getAllAppointments = async () => {
   const result = await prisma.appointment.findMany()
   return result
@@ -67,4 +221,7 @@ const getAllAppointments = async () => {
 export const AppointmentService = {
   bookAppointment,
   getAllAppointments,
+  cancelAppointment,
+  startedAppointment,
+  finishAppointment,
 }
